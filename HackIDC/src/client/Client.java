@@ -4,10 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -34,32 +34,38 @@ public class Client {
 		Object recived=null;
 		PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);										// to be able to respond to server
 		BufferedReader UserInput = new BufferedReader(new InputStreamReader(System.in));								// to get input from *******THE CLIENT IT SELF
-		//BufferedReader ServerReciver = new BufferedReader(new InputStreamReader(socket.getInputStream()));		//to get messages from *****THE SERVER
+		BufferedReader ServerReciver = new BufferedReader(new InputStreamReader(socket.getInputStream()));		//to get messages from *****THE SERVER
+		ObjectInputStream objectInput = new ObjectInputStream(socket.getInputStream());
+		ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
+		Scanner scanner = new Scanner(System.in);
+		//ObjectOutputStream sender = new ObjectOutputStream(socket.getOutputStream());
 		while (true) {
+			//System.out.println("HEY");
+			//String readerInput = UserInput.readLine();//get what to send to server
+			String readerInput = scanner.nextLine();//get what to send to server
+			///printWriter.println(readerInput);//Sending the message to the server
+			objectOutput.writeObject(readerInput);
+			//recived = ServerReciver.readLine();//Readingt
+			//sender.w
 			
-			String readerInput = UserInput.readLine();//get what to send to server
-			printWriter.println(readerInput); // send to server
-			
-			
-			
-			  ObjectInputStream objectInput = new ObjectInputStream(socket.getInputStream());//to get response from inputstream
-			  try {
+			try
+			{	
 				recived = objectInput.readObject();//read response
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println("NORMAL reciver = "+recived);//print to check
-			if(recived instanceof ArrayList)//check instancce of response
-			{
-				ArrayList<Job> res;
-				res=(ArrayList<Job>)recived;
-				for(Job x : res)
-					System.out.println(x);
-			}else System.out.println(recived);//print as string if not found anything else.
-			
-			
+				//System.out.println("HE3Y");
 
+				if(recived instanceof ArrayList)//check instancce of response
+				{
+					//System.out.println("in instance");
+					ArrayList<Job> res;
+					res=(ArrayList<Job>)recived;
+				//	for(Job x : res)
+					//	System.out.println(x);
+				}else System.out.println(recived);//print as string if not found anything else.
+			}catch (Exception e1) {
+				e1.printStackTrace();
+				}
+
+			//System.out.println(recived);//print to check
 		}
 	}
 
