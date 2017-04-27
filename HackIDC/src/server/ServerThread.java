@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import dataTypes.Message;
+import datatypes.Message;
 
 public class ServerThread extends Thread {
 	Socket socket;
@@ -26,11 +26,17 @@ public class ServerThread extends Thread {
 			temp = new PrintWriter(socket.getOutputStream(), true);
 			while ((message = in.readLine()) != null) {
 				String[] dummy = message.split(" ");
-				tempMsg.op = dummy[0];
-				tempMsg.dataString = dummy[1];
-				System.out.println("op = " + tempMsg.op + " " + "dataString = " + tempMsg.dataString);
-				temp.println(message);
-				HandleUser(tempMsg);
+				try {
+					tempMsg.op = dummy[0];
+					tempMsg.dataString = dummy[1];
+					System.out.println("op = " + tempMsg.op + " " + "dataString = " + tempMsg.dataString);
+
+					HandleUser(tempMsg);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+			        System.out.println("String not fine");
+				}
+				temp.println(message);//ECHO CLIENT REMOVE THIS AFTER FINISH
 			}
 			socket.close();
 		} catch (IOException e) {
@@ -45,7 +51,8 @@ public void HandleUser(Message msg)
 	{
 		switch(msg.op)
 		{
-		case "newOrder":
+		case "NEWORDER":
+			System.out.println("new order shit");
 			break;
 		default:
 			break;

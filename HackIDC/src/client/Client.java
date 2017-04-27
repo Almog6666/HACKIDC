@@ -1,4 +1,4 @@
-package Client;
+package client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +19,6 @@ public class Client {
 			socket = new Socket(ServerAddress, PORT);
 			Start(socket);
 		} catch (Exception e) {
-			e.printStackTrace();
 			System.out.println("Cant establish connection to server..shutting down.\n");
 			System.exit(1);
 		}
