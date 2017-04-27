@@ -4,11 +4,13 @@ import java.awt.List;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Server {
 	public static final int PORT = 5555;
 	public static int usernum = 1;
+	Connection conn;
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
@@ -32,7 +34,7 @@ public class Server {
 		}
 
 		try {
-			this.conn = DriverManager.getConnection("jdbc:mysql://10.10.19.229/hackidc", "root", "Braude");
+			this.conn = DriverManager.getConnection("jdbc:mysql://10.10.19.229:3306/hackidc", "test", "Braude");
 			System.out.println("SQL connection succeed");
 		} catch (SQLException arg1) {
 			System.out.println("SQLException: " + arg1.getMessage());
