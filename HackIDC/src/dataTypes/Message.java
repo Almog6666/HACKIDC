@@ -1,4 +1,4 @@
-package datatypes;
+package dataTypes;
 
 public class Message {
 	

@@ -10,7 +10,7 @@ import java.sql.*;
 public class Server {
 	public static final int PORT = 5555;
 	public static int usernum = 1;
-	private Connection conn;
+	private static Connection conn;
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
@@ -46,5 +46,10 @@ public class Server {
 			Socket socket = serverSocket.accept();
 			new ServerThread(socket).start();
 		}
+	}
+	
+	public static Connection getConnection()
+	{
+		return conn;
 	}
 }
