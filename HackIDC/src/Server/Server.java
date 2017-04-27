@@ -24,6 +24,21 @@ public class Server {
 		System.out.println("Setting up server at port :" + PORT + "\n");
 		ServerSocket serverSocket = new ServerSocket(PORT);
 		System.out.println("Server ready for connections at port:" + PORT + "\n");
+		//Connecting to the DB
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+		} catch (Exception arg2) {
+			;
+		}
+
+		try {
+			this.conn = DriverManager.getConnection("jdbc:mysql://10.10.19.229/hackidc", "root", "Braude");
+			System.out.println("SQL connection succeed");
+		} catch (SQLException arg1) {
+			System.out.println("SQLException: " + arg1.getMessage());
+			System.out.println("SQLState: " + arg1.getSQLState());
+			System.out.println("VendorError: " + arg1.getErrorCode());
+		}
 		while (true) {
 			Socket socket = serverSocket.accept();
 			new ServerThread(socket).start();
