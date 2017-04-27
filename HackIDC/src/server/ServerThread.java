@@ -27,12 +27,17 @@ public class ServerThread extends Thread {
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			temp = new PrintWriter(socket.getOutputStream(), true);
 			while ((message = in.readLine()) != null) {
-				String[] dummy = message.split(" ");
-				tempMsg.op = dummy[0];
-				tempMsg.dataString = dummy[1];
-				System.out.println("op = " + tempMsg.op + " " + "dataString = " + tempMsg.dataString);
+				String[] dummy = message.split("_");
+				try{
+					tempMsg.op = dummy[0];
+					tempMsg.dataString = dummy[1];
+					System.out.println("op = " + tempMsg.op + " " + "dataString = " + tempMsg.dataString);
+					temp.println(HandleUser(tempMsg));//Sending the output to the user
+				}catch(Exception e)
+				{
+					System.out.println("String not fine");
+				}
 				temp.println(message);
-				temp.println(HandleUser(tempMsg));//Sending the output to the user
 			}
 			socket.close();
 		} catch (IOException e) {
@@ -47,7 +52,7 @@ public class ServerThread extends Thread {
 	{
 		switch(msg.op)
 		{
-		case "newOrder":
+		case "NEWORDER":
 			return addNewOrder(msg.dataString);
 		default:
 			return "DREK";
@@ -61,16 +66,16 @@ public class ServerThread extends Thread {
 		try {
 			Statement stmt = Server.getConnection().createStatement();
 			String[] temp = data.split(",");//[0] - user_id, [1] - requested date,
-			// [2] - error code, [3] - error description, [4] - error fix
+			//  [2] - time_from,[3] - time_to [4] - error code, [5] - error description, [6] - error fix
 			int user_id = Integer.parseInt(temp[0]);
-			@SuppressWarnings("deprecation")
-			java.util.Date myDate = new java.util.Date(temp[1]);
-			java.sql.Date sqlDate = new java.sql.Date(myDate.getTime());
-			String errorCode = temp[2];
-			String errorDescription = temp[3];
-			String errorFix = temp[4];
-			stmt.executeUpdate("insert into jobs (user_id,date_time,error_code,error_disc,error_fix) "
-				+ "values("+user_id+",'"+sqlDate+"','"+errorCode+"','"+errorDescription+"','"+errorFix+");");
+			String date = temp[1];
+			String hour_from = temp[2];
+			String hour_to = temp[3];
+			String errorCode = temp[4];
+			String errorDescription = temp[5];
+			String errorFix = temp[6];
+			stmt.executeUpdate("INSERT INTO jobs (user_id,date,time_from,time_to,error_code,error_disc,error_fix) "
+					+ "values("+user_id+",'"+date+"','"+hour_from+"','"+hour_to+"','"+errorCode+"','"+errorDescription+"','"+errorFix+"');");
 			return "SUCCESS";
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
